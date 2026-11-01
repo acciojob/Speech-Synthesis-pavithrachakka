@@ -37,6 +37,34 @@
   const stopButton = document.querySelector('#stop');
 
   //Your code goes here
+const rate = document.getElementById('rate');
+const pitch = document.getElementById('pitch');
+const text = document.getElementById('text');
+
+msg.text = text.value;
+
+function getVoices(){
+  voices = speechSynthesis.getVoices();
+  voiceSelect.innerHTML = voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
+}
+speechSynthesis.addEventListener('voiceschanged', getVoices);
+getVoices();
+
+voiceSelect.addEventListener('change', function(){
+  msg.voice = voices.find(v => v.name === this.value);
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); speechSynthesis.speak(msg); }
+});
+
+rate.addEventListener('input', () => msg.rate = rate.value);
+pitch.addEventListener('input', () => msg.pitch = pitch.value);
+
+speakBtn.addEventListener('click', () => {
+  if(!text.value.trim()) return;
+  speechSynthesis.cancel();
+  msg.text = text.value;
+  speechSynthesis.speak(msg);
+});
+stopBtn.addEventListener('click', () => speechSynthesis.cancel());
 </script>
 
 </body>
